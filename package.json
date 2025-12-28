@@ -2,7 +2,9 @@
   "name": "@library/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "api": "nx run api:serve"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^11.0.0",
