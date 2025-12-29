@@ -5,19 +5,19 @@ export class Book {
 	@PrimaryGeneratedColumn('uuid')
 	id!: string;
 
-	@Column()
+	@Column({ type: 'varchar' })
 	title!: string;
 
-	@Column()
+	@Column({ type: 'varchar' })
 	author!: string;
 
-	@Column()
+	@Column({ type: 'varchar' })
 	isbn!: string;
 
-	@Column()
+	@Column({ type: 'int' })
 	publicationYear!: number;
 
-	@Column({ default: 0 })
+	@Column({ default: 0, type: 'int' })
 	amount!: number;
 
 	@CreateDateColumn()
