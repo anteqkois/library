@@ -26,7 +26,7 @@ async function seed() {
 
 	// 1. Admins
 	console.log('Cleaning Admins...');
-	// await adminRepo.delete({}); // Optional: Clear existing
+	await adminRepo.delete({}); // Optional: Clear existing
 	const passwordHash = await bcrypt.hash('pass123', 10);
 
 	const adminExists = await adminRepo.findOne({ where: { username: 'admin' } });
@@ -45,15 +45,21 @@ async function seed() {
 	console.log('Creating 10 Customers...');
 	const customers: Customer[] = [];
 
-	// Base user
-	const customer = customerRepo.create({
-		email: 'user@example.com',
-		password: passwordHash,
-		name: 'John Doe',
-		libraryCardNumber: 'CARD-12345',
-		phoneNumber: '+123456789',
-	});
-	customers.push(await customerRepo.save(customer));
+	// Base customer
+	const customerExists = await customerRepo.findOne({ where: { email: 'user@example.com' } });
+	if (!customerExists) {
+		const customer = customerRepo.create({
+			email: 'user@example.com',
+			password: passwordHash,
+			name: 'John Doe',
+			libraryCardNumber: 'CARD-12345',
+			phoneNumber: '+123456789',
+		});
+		customers.push(await customerRepo.save(customer));
+		console.log('✅ Customer created: user@example.com / pass123');
+	} else {
+		console.log('ℹ️ Customer already exists');
+	}
 
 	for (let i = 0; i < 10; i++) {
 		const customer = customerRepo.create({
@@ -81,14 +87,31 @@ async function seed() {
 	}
 
 	// 4. Loans
-	console.log('Creating 20 Loans...');
-	for (let i = 0; i < 20; i++) {
+	console.log('Creating 50 Loans...');
+	for (let i = 0; i < 50; i++) {
 		const customer = faker.helpers.arrayElement(customers);
 		const book = faker.helpers.arrayElement(books);
 		const status = faker.helpers.enumValue(LoanStatus);
 
 		const loan = loanRepo.create({
 			customer,
+			book,
+			status,
+			borrowedAt: faker.date.recent({ days: 30 }),
+			returnedAt: status === LoanStatus.RETURNED ? faker.date.recent({ days: 5 }) : null,
+		});
+		await loanRepo.save(loan);
+	}
+
+	// And also loand for primary customer 
+	console.log('Creating 20 Loans for main customer user@example.com / pass123...');
+	const mainCustomer = customers[0]
+	for (let i = 0; i < 20; i++) {
+		const book = faker.helpers.arrayElement(books);
+		const status = faker.helpers.enumValue(LoanStatus);
+
+		const loan = loanRepo.create({
+			customer: mainCustomer,
 			book,
 			status,
 			borrowedAt: faker.date.recent({ days: 30 }),
