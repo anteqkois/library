@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { BooksModule } from './books/books.module';
 import { LoansModule } from './loans/loans.module';
+import { ScalarController } from './scalar.controller';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { LoansModule } from './loans/loans.module';
     BooksModule,
     LoansModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, ScalarController],
   providers: [AppService],
 })
 export class AppModule { }
