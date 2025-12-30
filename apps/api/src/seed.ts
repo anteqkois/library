@@ -27,16 +27,16 @@ async function seed() {
 	// 1. Admins
 	console.log('Cleaning Admins...');
 	// await adminRepo.delete({}); // Optional: Clear existing
-	const passwordHash = await bcrypt.hash('password123', 10);
+	const passwordHash = await bcrypt.hash('pass123', 10);
 
 	const adminExists = await adminRepo.findOne({ where: { username: 'admin' } });
 	if (!adminExists) {
 		await adminRepo.save({
-			email: 'admin@library.com',
+			email: 'admin@example.com',
 			password: passwordHash,
 			username: 'admin',
 		});
-		console.log('✅ Admin created: admin@library.com / password123');
+		console.log('✅ Admin created: admin@example.com / pass123');
 	} else {
 		console.log('ℹ️  Admin already exists');
 	}
@@ -44,6 +44,17 @@ async function seed() {
 	// 2. Customers
 	console.log('Creating 10 Customers...');
 	const customers: Customer[] = [];
+
+	// Base user
+	const customer = customerRepo.create({
+		email: 'user@example.com',
+		password: passwordHash,
+		name: 'John Doe',
+		libraryCardNumber: 'CARD-12345',
+		phoneNumber: '+123456789',
+	});
+	customers.push(await customerRepo.save(customer));
+
 	for (let i = 0; i < 10; i++) {
 		const customer = customerRepo.create({
 			email: faker.internet.email(),
