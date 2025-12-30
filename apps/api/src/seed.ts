@@ -26,7 +26,7 @@ async function seed() {
 
 	// 1. Admins
 	console.log('Cleaning Admins...');
-	await adminRepo.delete({}); // Optional: Clear existing
+	// await adminRepo.delete({}); // Skipping delete to avoid empty criteria error
 	const passwordHash = await bcrypt.hash('pass123', 10);
 
 	const adminExists = await adminRepo.findOne({ where: { username: 'admin' } });
@@ -82,6 +82,7 @@ async function seed() {
 			isbn: faker.commerce.isbn(),
 			publicationYear: faker.date.past({ years: 50 }).getFullYear(),
 			amount: faker.number.int({ min: 1, max: 10 }),
+			tags: faker.helpers.arrayElements(['Fantasy', 'Sci-Fi', 'Mystery', 'History', 'Romance', 'Tech', 'Biography'], { min: 1, max: 3 }),
 		});
 		books.push(await bookRepo.save(book));
 	}
@@ -118,6 +119,25 @@ async function seed() {
 			returnedAt: status === LoanStatus.RETURNED ? faker.date.recent({ days: 5 }) : null,
 		});
 		await loanRepo.save(loan);
+	}
+
+	// Loans for primary admin
+	console.log('Creating 20 Loans for main admin admin@example.com / pass123...');
+	const mainAdmin = await adminRepo.findOne({ where: { username: 'admin' } });
+	if (mainAdmin) {
+		for (let i = 0; i < 20; i++) {
+			const book = faker.helpers.arrayElement(books);
+			const status = faker.helpers.enumValue(LoanStatus);
+
+			const loan = loanRepo.create({
+				admin: mainAdmin,
+				book,
+				status,
+				borrowedAt: faker.date.recent({ days: 30 }),
+				returnedAt: status === LoanStatus.RETURNED ? faker.date.recent({ days: 5 }) : null,
+			});
+			await loanRepo.save(loan);
+		}
 	}
 
 	await dataSource.destroy();

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards, Request } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { BooksService } from './books.service';
@@ -25,10 +25,26 @@ export class BooksController {
 		return this.booksService.findAll(query);
 	}
 
+	@Get('recommendations')
+	@ApiBearerAuth()
+	@UseGuards(AuthGuard('jwt'))
+	@ApiOperation({ summary: 'Get book recommendations (Based on "Tags")' })
+	getRecommendations(@Request() req: any) {
+		return this.booksService.getRecommendations(req.user.userId);
+	}
+
 	@Get(':id')
 	@ApiOperation({ summary: 'Get a book by ID (Public)' })
 	findOne(@Param('id') id: string) {
 		return this.booksService.findOne(id);
+	}
+
+
+
+	@Get(':id/availability')
+	@ApiOperation({ summary: 'Check book availability' })
+	getAvailability(@Param('id') id: string) {
+		return this.booksService.getAvailability(id);
 	}
 
 	@ApiBearerAuth()

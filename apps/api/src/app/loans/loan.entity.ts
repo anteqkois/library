@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Customer } from '../users/customer.entity';
+import { Admin } from '../users/admin.entity';
 import { Book } from '../books/book.entity';
 
 export enum LoanStatus {
@@ -12,8 +13,11 @@ export class Loan {
 	@PrimaryGeneratedColumn('uuid')
 	id!: string;
 
-	@ManyToOne(() => Customer, { eager: true })
-	customer!: Customer;
+	@ManyToOne(() => Customer, { eager: true, nullable: true })
+	customer?: Customer;
+
+	@ManyToOne(() => Admin, { eager: true, nullable: true })
+	admin?: Admin;
 
 	@ManyToOne(() => Book, { eager: true })
 	book!: Book;

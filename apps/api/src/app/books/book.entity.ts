@@ -20,6 +20,9 @@ export class Book {
 	@Column({ default: 0, type: 'int' })
 	amount!: number;
 
+	@Column({ type: 'simple-array', default: '' })
+	tags!: string[];
+
 	@CreateDateColumn()
 	createdAt!: Date;
 

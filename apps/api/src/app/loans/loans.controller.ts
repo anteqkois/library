@@ -15,15 +15,44 @@ export class LoansController {
 	@ApiOperation({ summary: 'Borrow a book (Customer Only)' })
 	borrow(@Request() req: any, @Body() createLoanDto: CreateLoanDto) {
 		// Assuming role check handled by guard/strategy logic, but simpler here:
-		// Ideally we should have a RolesGuard. For MVP, assuming any auth user can try,
-		// but practically only customers should borrow. Admin borrowing is allowed in this implementation for simplicity.
-		return this.loansService.borrow(req.user.userId, createLoanDto);
+		// Role check is implicit via AuthGuard, logic now supports both.
+		return this.loansService.borrow(req.user, createLoanDto);
 	}
 
 	@Get('my')
 	@ApiOperation({ summary: 'Get my loans history' })
 	getMyLoans(@Request() req: any) {
 		return this.loansService.getMyLoans(req.user.userId);
+	}
+
+	// --- Admin Endpoints ---
+
+	@Get('stats')
+	@ApiOperation({ summary: 'Get global loan statistics (Admin Only)' })
+	getGlobalStats(@Request() req: any) {
+		if (req.user.role !== 'admin') throw new Error('Forbidden'); // Simple check
+		return this.loansService.getGlobalStats();
+	}
+
+	@Get('stats/users')
+	@ApiOperation({ summary: 'Get loan statistics per user (Admin Only)' })
+	getUserStats(@Request() req: any) {
+		if (req.user.role !== 'admin') throw new Error('Forbidden');
+		return this.loansService.getUserStats();
+	}
+
+	@Get('stats/books')
+	@ApiOperation({ summary: 'Get loan statistics per book (Admin Only)' })
+	getBookStats(@Request() req: any) {
+		if (req.user.role !== 'admin') throw new Error('Forbidden');
+		return this.loansService.getBookStats();
+	}
+
+	@Get()
+	@ApiOperation({ summary: 'List all loans (Admin Only)' })
+	findAll(@Request() req: any) {
+		if (req.user.role !== 'admin') throw new Error('Forbidden');
+		return this.loansService.findAll();
 	}
 
 	@Post(':id/return')
