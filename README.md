@@ -39,12 +39,14 @@ So login and then fill authorization setting on top of page
 ## Code structure
 
 The main project sourcode is inside `apps/api/src`
+
 For example model for books is inside `apps/api/src/app/books/book.entity.ts` file
+
 DTOs for books is inside `apps/api/src/app/books/dto` dir
 
 We have three main models
-`apps/api/src/app/books`
-`apps/api/src/app/loans`
-`apps/api/src/app/users`
+- `apps/api/src/app/books`
+- `apps/api/src/app/loans`
+- `apps/api/src/app/users`
 
 All of them have thier services, models, DTOs, controllers, etc.
