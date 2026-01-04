@@ -1,3 +1,5 @@
+Antoni Kois, Adam Kot gr.2 niestacjonarne
+
 Dzień dobry,
 
 z racji iż nie mogę dodać projekty z powodu limitu (100MB a projekty ma 126MB - zip), podsyłam link do zipa.
