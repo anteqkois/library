@@ -4,6 +4,9 @@
   "license": "MIT",
   "scripts": {
     "api": "nx run api:serve --no-tui",
+    "api:build": "nx run api:build --no-tui",
+    "api:local": "node -r dotenv/config dist/apps/api/main.js dotenv_config_path=./apps/api/.env dotenv_config_debug=true",
+    "api:prod": "node dist/apps/api/main.js",
     "script": "NODE_ENV=script npx tsx --tsconfig tsconfig.base.json tools/run-script.ts"
   },
   "private": true,
@@ -22,7 +25,6 @@
     "class-validator": "^0.14.3",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.0",
     "sqlite3": "^5.1.7",
     "typeorm": "^0.3.28"
   },

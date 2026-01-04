@@ -33,7 +33,7 @@ async function bootstrap() {
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`,
   );
   Logger.log(
-    `📚 Documentation is running on: http://localhost:${port}/reference`,
+    `📚 Documentation is running on:\n\n\tSwagger: http://localhost:${port}/${globalPrefix}/reference\n\tScalar: http://localhost:${port}/${globalPrefix}/scalar`,
   );
 }
 
